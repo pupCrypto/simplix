@@ -1,7 +1,7 @@
 const net = require('net');
 
 
-class Server extends net.Server {
+class Web extends net.Server {
     constructor(echo=true) {
         this.echo = echo;
     }
@@ -17,5 +17,5 @@ class Server extends net.Server {
 
 
 module.exports = {
-    Server,
+    Web,
 };
