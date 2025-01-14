@@ -5,7 +5,6 @@ class TcpServer extends net.Server {
     constructor(echo = true) {
         super();
         this.echo = echo;
-        this._onData = () => {};
         this.initCbs();
     }
     /**
@@ -30,22 +29,16 @@ class TcpServer extends net.Server {
         });
     }
 
-    onConnection(socket) {
-        this.echo && console.log(`New TCP connection from ${socket.remoteAddress}:${socket.remotePort}`);
-        socket.on('close', () => {
-            this.echo && console.log(`TCP connection from ${socket.remoteAddress}:${socket.remotePort} closed`);
-        });
-        socket.on('data', (data) => {
-            this._onData(data, socket);
-        });
-    }
-
-    set onData(callback) {
-        this._onData = callback;
-    }
-
     initCbs() {
-        this.on('connection', this.onConnection.bind(this));
+        this.on('connection', (socket) => {
+            this.echo && console.log(`New TCP connection from ${socket.remoteAddress}:${socket.remotePort}`);
+            socket.on('close', () => {
+                this.echo && console.log(`TCP connection from ${socket.remoteAddress}:${socket.remotePort} closed`);
+            });
+            socket.on('data', (data) => {
+                this.emit('data-socket', data, socket);
+            });
+        });
     }
 }
 
