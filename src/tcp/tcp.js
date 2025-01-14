@@ -21,8 +21,13 @@ class TcpServer extends net.Server {
         });
     }
 
-    async receive() {
-
+    async close() {
+        return new Promise(resolve => {
+            super.close(() => {
+                this.echo && console.log('TCP server closed');
+                resolve();
+            });
+        });
     }
 
     onConnection(socket) {
