@@ -1,5 +1,5 @@
 const { Engine } = require('./engine');
-const { Router } = require('./router');
+const { Router } = require('./http/router');
 
 class Simplix {
     constructor(echo=true) {

@@ -1,7 +1,7 @@
 const assert = require('node:assert');
 const { describe, it } = require('node:test');
 const { Engine } = require('../src/engine');
-const { Router } = require('../src/router');
+const { Router } = require('../src/http/router');
 
 describe('Engine', () => {
     it('should handle request', async () => {

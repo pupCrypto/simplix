@@ -8,6 +8,7 @@ class Engine {
         this.server = new HttpServer(echo);
         this.server.on('request', this.httpRequestHandler.bind(this));
         this.routers = [];
+        this.proxies = [];
     }
     async listen({ host, port }) {
         await this.server.listen({ host, port });
@@ -17,6 +18,9 @@ class Engine {
     }
     registerRouter(router) {
         this.routers.push(router);
+    }
+    registerProxy(proxy) {
+        this.proxies.push(proxy);
     }
 
     async httpRequestHandler(request, socket) {
