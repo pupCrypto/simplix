@@ -10,7 +10,7 @@ function query(name, defaultValue, required=false, type='string') {
     if (defaultValue && required) {
         throw new Error(`Query parameter "${name}" cannot be required and have a default value`);
     }
-    const value = query.request.uri.query[name];
+    const value = query.context.request.uri.query[name];
     if (required && !value) {
         throw new Error(`Query parameter "${name}" is required`);
     }
@@ -26,8 +26,8 @@ function query(name, defaultValue, required=false, type='string') {
     return defaultValue;
 }
 
-query.attach = (req) => query.request = req;
-query.clear = () => query.request = undefined;
+query.attach = (context) => query.context = context;
+query.clear = () => query.context = undefined;
 
 module.exports = {
     query,

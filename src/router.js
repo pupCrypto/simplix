@@ -30,6 +30,10 @@ class Router {
         this.routes.push(route);
     }
 
+    findRoute(path) {
+        return this.routes.find(r => r.path === path);
+    }
+
     _buildRoute(method, path, callback) {
         return {
             method,
