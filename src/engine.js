@@ -24,10 +24,10 @@ class Engine {
     }
 
     async httpRequestHandler(request, socket) {
-        const route = this.findRoute(request.startLine.uri);
+        const route = this.findRoute(request.startLine.path);
         if (route) {
             bindContext({ request });
-            const result = await route.callback(request, socket);
+            const result = await route.callback();
             clearContext();
             const response = new HttpResponse();
             response.body = new PlainBody(result.toString());

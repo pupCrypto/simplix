@@ -1,13 +1,12 @@
-class A {
-    constructor() {
-        this.b()
-    }
+function query(name) {
+    return name + query.value;
 }
 
-class B extends A {
-    b() {
-        console.log('b');
-    }
+function call(cb) {
+    query.value = 'asdf';
+    const result = cb();
+    query.value = undefined;
+    return result;
 }
 
-new B();
+console.log(call((a = query('Egor')) => a));

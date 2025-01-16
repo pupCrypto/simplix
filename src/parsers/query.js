@@ -10,7 +10,7 @@ function query(name, defaultValue, required=false, type='string') {
     if (defaultValue && required) {
         throw new Error(`Query parameter "${name}" cannot be required and have a default value`);
     }
-    const value = query.context.request.uri.query[name];
+    const value = query.context.request.startLine.query.get(name);
     if (required && !value) {
         throw new Error(`Query parameter "${name}" is required`);
     }
