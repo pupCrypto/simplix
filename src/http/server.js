@@ -6,14 +6,22 @@ class HttpServer extends TcpServer {
     constructor(echo=true) {
         super(echo);
         this.on('data-socket', (data, socket) => {
-            try {
-                this.emit('request', RequestParser.parseString(data.toString()), socket);
-            } catch(e) {
-                socket.end(WRONG_HTTP_REQUEST);  // TODO: need to end connection by proper http response
+            if (socket.isWs) {
+                return this.emit('ws-data', data, socket);
             }
+            try {
+                var request = RequestParser.parseString(data.toString());
+            } catch(e) {
+                return socket.end(WRONG_HTTP_REQUEST);
+            }
+            if (request.headers.findHeader('Upgrade')?.name === 'websocket') {
+                socket.isWs = true;
+                return this.emit('ws-request', request, socket);
+            }
+            this.emit('request', request, socket);
         });
         this.on('request', (request) => {
-            console.log(`HTTP ${request.startLine.method} ${request.startLine.uri}`);
+            this.echo && console.log(`HTTP ${request.startLine.method} ${request.startLine.uri}`);
         });
     }
 }

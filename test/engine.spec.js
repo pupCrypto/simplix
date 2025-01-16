@@ -3,6 +3,7 @@ const { describe, it } = require('node:test');
 const { Engine } = require('../src/engine');
 const { Router } = require('../src/http/router');
 const { query } = require('../src/parsers');
+const { randomPort } = require('./utils');
 
 describe('Engine', () => {
     it('should handle request', async () => {
@@ -12,8 +13,9 @@ describe('Engine', () => {
             return 'Hello World';
         });
         engine.registerRouter(router);
-        await engine.listen({ port: 8080 });
-        const response = await fetch('http://localhost:8080/test');
+        const port = randomPort();
+        await engine.listen({ port });
+        const response = await fetch(`http://localhost:${port}/test`);
         assert.equal(response.status, 200);
         assert.equal(response.statusText, 'OK');
         assert.equal(await response.text(), 'Hello World');
@@ -26,9 +28,10 @@ describe('Engine', () => {
             return `Hello ${name}`;
         });
         engine.registerRouter(router);
+        const port = randomPort();
 
-        await engine.listen({ port: 8080 });
-        const response = await fetch('http://localhost:8080/test?name=John+Doe');
+        await engine.listen({ port });
+        const response = await fetch(`http://localhost:${port}/test?name=John+Doe`);
         assert.equal(response.status, 200);
         assert.equal(response.statusText, 'OK');
         assert.equal(await response.text(), 'Hello John Doe');
