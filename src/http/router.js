@@ -1,3 +1,5 @@
+const { HttpProxy, WsProxy } = require('../proxy');
+
 class Router {
     /**
      * 
@@ -5,6 +7,7 @@ class Router {
      */
     constructor(strict=true) {
         this.routes = [];
+        this.proxies = [];
     }
 
     get(path, callback) {
@@ -22,7 +25,16 @@ class Router {
     patch(path, callback) {
         this.addRoute(this._buildRoute('PATCH', path, callback));
     }
-
+    proxy(path, target) {
+        const url = new URL(target);
+        if (url.protocol === 'http:') {
+            this.addProxy({ path, target, type: 'http'});
+        } else if (url.protocol === 'ws:') {
+            this.addProxy({ path, target, type: 'ws'});
+        } else {
+            throw new Error('Unsupported proxy protocol');
+        }
+    }
     addRoute(route) {
         if (this.strict && this.routes.find(r => r.path === route.path)) {
             throw new Error('Route already exists');
@@ -30,8 +42,16 @@ class Router {
         this.routes.push(route);
     }
 
+    addProxy(proxy) {
+        this.proxies.push(proxy);
+    }
+
     findRoute(path) {
         return this.routes.find(r => r.path === path);
+    }
+
+    findProxy(path) {
+        return this.proxies.find(p => p.path === path);
     }
 
     _buildRoute(method, path, callback) {
