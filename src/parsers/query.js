@@ -7,6 +7,9 @@
  * @returns 
  */
 function query(name, defaultValue, required=false, type='string') {
+    if (!name) {
+        throw new Error('Query parameter name is required');
+    }
     if (defaultValue && required) {
         throw new Error(`Query parameter "${name}" cannot be required and have a default value`);
     }
