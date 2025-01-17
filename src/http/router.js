@@ -42,10 +42,6 @@ class Router {
         this.routes.push(route);
     }
 
-    addProxy(proxy) {
-        this.proxies.push(proxy);
-    }
-
     findRoute(path) {
         return this.routes.find(r => r.path === path);
     }
