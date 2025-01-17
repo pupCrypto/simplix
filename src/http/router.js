@@ -25,7 +25,7 @@ class Router {
     patch(path, callback) {
         this.addRoute(this._buildRoute('PATCH', path, callback));
     }
-    proxy(path, target) {
+    proxy(path, target) {  // TODo: need to add route here
         const url = new URL(target);
         if (url.protocol === 'http:') {
             this.addProxy({ path, target, type: 'http'});
