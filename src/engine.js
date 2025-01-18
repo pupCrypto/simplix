@@ -1,6 +1,6 @@
 const { HttpResponse, PlainBody } = require('http-builder');
 const { HttpServer } = require('./http');
-const { bindContext, clearContext } = require('./parsers');
+const { bindContext, clearContext } = require('./parameters');
 
 
 class Engine {
@@ -32,9 +32,20 @@ class Engine {
         }
     }
 
-    async wsRequestHandler(request, socket) {}
+    async wsRequestHandler(request, socket) {
+        const ws = this.findWs(request.startLine.path);
+        if (ws) {
+            socket.callback = ws.callback;
+            if (!await ws.acceptCallback()) {
+                return socket.end(); // TODO: need to send proper response
+            }
+        }
+    }
 
-    async wsDataHandler(data, socket) {}
+    async wsDataHandler(data, socket) {
+        const result = await socket?.callback(data); 
+        socket.write(result);
+    }
 
 
     findRoute(path) {
@@ -42,6 +53,14 @@ class Engine {
             const route = router.findRoute(path);
             if (route) {
                 return route;
+            }
+        }
+    }
+    findWs(path) {
+        for (const router of this.routers) {
+            const ws = router.findWs(path);
+            if (ws) {
+                return ws;
             }
         }
     }

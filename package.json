@@ -10,5 +10,8 @@
   "description": "",
   "dependencies": {
     "http-builder": "git@github.com:pupCrypto/http-builder.git"
+  },
+  "devDependencies": {
+    "ws": "^8.18.0"
   }
 }

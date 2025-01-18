@@ -14,7 +14,7 @@ class HttpServer extends TcpServer {
             } catch(e) {
                 return socket.end(WRONG_HTTP_REQUEST);
             }
-            if (request.headers.findHeader('Upgrade')?.name === 'websocket') {
+            if (request.headers.findHeader('Upgrade')?.value.toLowerCase() === 'websocket') {
                 socket.isWs = true;
                 return this.emit('ws-request', request, socket);
             }
